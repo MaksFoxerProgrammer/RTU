@@ -1,0 +1,141 @@
+MySQL.txt
+
+========= Работа с БД ================
+
+CREATE DATABASE [databasename];				Создание таблицы
+SHOW DATABASES;								Список всех БД на сервере
+USE [db name];								Подключиться для работы с БД
+DROP DATABASE [database name];				Удалить БД
+
+========= Работа с таблицами =========
+
+CREATE TABLE имя_таблицы (
+    имя_колонки1 ТИП ДАННЫХ,
+    имя_колонки2 ТИП ДАННЫХ
+);
+
+CREATE TABLE AuthorsTBL (
+    AuthorID INT NOT NULL AUTO_INCREMENT,
+    AuthorName VARCHAR(100),
+    PRIMARY KEY(AuthorID)
+);
+
+SHOW TABLES;								Вывести все таблицы
+DESCRIBE [table name];						Посмотреть формат таблицы в базе
+SELECT * FROM [table name];					Показать все содержимое в таблице
+SELECT COUNT(*) FROM [table name];			Отобразить количество строк в таблице
+SELECT SUM(*) FROM [table name];			Подсчитать количество колонок в таблице
+DELETE from [table name] where [field name] = 'whatever';			Удаление строки в таблице
+alter table [table name] DROP INDEX [column name];					Удаление столбцов в таблице
+DROP TABLE [table name];					Удалить таблицу из базы
+
+========= Работа с колонками =========
+
+ALTER TABLE [table name] ADD COLUMN [new column name] varchar (20)					Добавить колонку в таблицу
+ALTER TABLE [table name] CHANGE [old column name] [new column name] varchar (50);	Изменить дданные колонки
+ALTER TABLE [table name] ADD UNIQUE ([column name]);								Колонка с уникальным именем
+ALTER TABLE [table name] MODIFY [column name] VARCHAR(3);							Изменение размера колонки
+
+========= Выборка данных =============
+
+SELECT * FROM [table name];					Все содержимое таблицы
+SHOW COLUMNS FROM [table name];				Отоброзить колонки и их содержимое в выбранной таблице
+SELECT * FROM [table name] WHERE [field name] = "whatever";						Отоброзить строки выбранной таблицы с WHATEVER
+SELECT * FROM [table name] WHERE name = "Bob" AND phone_number = '3444444';		Отоброзить все записи по условию
+SELECT * FROM [table name] WHERE name != "Bob" AND phone_number = '3444444' order by phone_number;	Другой пример
+
+
+========= Моя работа =================
+
+На винде -  https://dev.mysql.com/downloads/installer/ 
+
+ВКЛ - systemctl enable mariadb
+ВКЛ - mysql -u root -p
+
+CREATE TABLE Menu (
+	IDDish INT NOT NULL AUTO_INCREMENT,
+	Name VARCHAR(100) NOT NULL,
+	CostD INT NOT NULL,
+	PRIMARY KEY(IDDish) 
+);
+
+CREATE TABLE Student (
+    IDStudent INT NOT NULL AUTO_INCREMENT,
+    Pass VARCHAR(100) NOT NULL,
+    Kard INT NOT NULL,
+    Name VARCHAR(100) NOT NULL,
+    IDDish INT NOT NULL,
+    PRIMARY KEY(IDStudent),
+    FOREIGN KEY (IDDish) REFERENCES Menu(IDDish)
+);
+
+CREATE TABLE Cashier (
+	IDCashier INT NOT NULL AUTO_INCREMENT,
+	Name VARCHAR(100) NOT NULL,
+	PRIMARY KEY(IDCashier) 
+);
+
+CREATE TABLE Cook (
+	IDCook  INT NOT NULL AUTO_INCREMENT,
+	Name  VARCHAR(100) NOT NULL,
+	PRIMARY KEY(IDCook)
+);
+
+CREATE TABLE Ord (
+	IDOrd INT NOT NULL AUTO_INCREMENT,
+	Dat INT NOT NULL,
+	Composit TEXT(100) NOT NULL,
+	IDStudent INT NOT NULL,
+	IDCook INT NOT NULL,
+	PRIMARY KEY(IDOrd),
+	FOREIGN KEY (IDStudent) REFERENCES Student(IDStudent),
+	FOREIGN KEY (IDCook) REFERENCES Cook(IDCook)
+);
+
+
+
+======================================
+		Полина
+======================================
+CREATE DATABASE Polina;
+USE Polina;
+
+CREATE TABLE Reservation (
+	IDReservation INT NOT NULL AUTO_INCREMENT,
+	Term TEXT(50) NOT NULL,
+	CheckInTime TEXT(50) NOT NULL,
+	PRIMARY KEY(IDReservation)
+);
+
+CREATE TABLE Customer (
+	IDCustomer INT NOT NULL AUTO_INCREMENT,
+	Name  TEXT(50) NOT NULL,
+	IDReservation INT NOT NULL,
+	PRIMARY KEY(IDCustomer),
+	FOREIGN KEY (IDReservation) REFERENCES Reservation(IDReservation)
+);
+
+CREATE TABLE Adm (
+	IDAdm INT NOT NULL AUTO_INCREMENT,
+	Name TEXT(50) NOT NULL,
+	PRIMARY KEY (IDAdm)
+);
+
+CREATE TABLE Room (
+	IDRoom INT NOT NULL AUTO_INCREMENT,
+	TypeOfNumber TEXT(50) NOT NULL,
+	NumberOfRooms INT NOT NULL,
+	Services TEXT(200) NOT NULL,
+	Price INT NOT NULL,
+	IDCustomer INT NOT NULL,
+	IDAdm INT NOT NULL,
+	PRIMARY KEY(IDRoom),
+	FOREIGN KEY (IDCustomer) REFERENCES Customer(IDCustomer),
+	FOREIGN KEY (IDAdm) REFERENCES Adm(IDAdm)
+);
+
+SHOW TABLES;
+
+INSERT INTO Reservation (Term, CheckInTime) VALUES ('1 день', '8:00'), ('2 недели', '13:00'),('3 дня', '8:30'),('двое суток', '20:20');
+
+INSERT INTO AuthorsTBL (AuthorID, AuthorName) VALUES ('1', 'Agatha Christie'), ('2', 'Stephen King'), ('3', 'Paulo Coelho');
