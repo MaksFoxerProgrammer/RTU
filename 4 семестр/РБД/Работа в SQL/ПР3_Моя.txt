@@ -1,0 +1,105 @@
+ПР3_Моя.txt
+==============
+
+Порядок выполнения работы:
+ 	Реализовать запрос выборки данных из одной таблицы с использованием конструкции: SELECT … FROM R WHERE … ORDER BY … (в отчет включить логическое пояснение запросов)
+
+	Разработать запрос выборки данных из нескольких таблиц с использованием различных вариантов реализации соединения: 
+		используя конструкцию WHERE: SELECT … FROM R, S WHERE R.A=S.A AND … ORDER BY … 
+		используя конструкцию «внутреннее соединение» – INNER JOIN: SELECT … FROM R INNER JOIN S ON R.A=S.A WHERE ... ORDER BY … 
+		используя конструкцию «внешнее соединение» – OUTER JOIN: SELECT … FROM R LEFT | RIGTH | FULL [OUTER] JOIN S ON R.A=S.A WHERE ... ORDER BY … 
+
+	Разработать запрос с подзапросом с использованием конструкций: SELECT … FROM … WHERE … [NOT] IN (SELECT …) Или SELECT … FROM … WHERE [NOT] EXISTS (SELECT …) 
+
+	Разработать запрос для получения статистических значений с использованием конструкций: 
+		расчет частных итогов для каждой комбинации значений атрибутов из списка <ATTR>: SELECT <ATTR>, COUNT() | SUM() | AVG() FROM … WHERE … GROUP BY <ATTR>. 
+		расчет частных итогов и итогов для каждой подкомбинации в порядке следования атрибутов из списка <ATTR>: SELECT <ATTR>, COUNT() | SUM() | AVG() FROM … WHERE … GROUP BY ROLLUP(<ATTR>). 
+		расчет частных итогов и итогов для каждой подкомбинации (все варианты) атрибутов из списка <ATTR>: SELECT <ATTR>, COUNT() | SUM() | AVG() FROM … WHERE … GROUP BY CUBE(<ATTR>). 
+		расчет итогов для каждого уникального значения каждого атрибута из списка <ATTR>: SELECT <ATTR>, COUNT() | SUM() | AVG() FROM … WHERE … GROUP BY GROUPING SETS(<ATTR>). 
+
+
+
+CREATE TABLE Student (
+    IDStudent INT NOT NULL AUTO_INCREMENT,
+    Kard INT,
+    Name VARCHAR(100) NOT NULL,
+    IDDish INT NOT NULL,
+    PRIMARY KEY(IDStudent),
+    FOREIGN KEY (IDDish) REFERENCES Menu(IDDish)
+);
+
+
+CREATE TABLE Ord (
+	IDOrd INT NOT NULL AUTO_INCREMENT,
+	Composit TEXT(100) NOT NULL,
+	IDStudent INT NOT NULL,
+	IDCook INT NOT NULL,
+	PRIMARY KEY(IDOrd),
+	FOREIGN KEY (IDStudent) REFERENCES Student(IDStudent),
+	FOREIGN KEY (IDCook) REFERENCES Cook(IDCook)
+);
+
+CREATE TABLE Menu (
+	IDDish INT NOT NULL AUTO_INCREMENT,
+	Name VARCHAR(100) NOT NULL,
+	CostD INT NOT NULL,
+	PRIMARY KEY(IDDish) 
+);
+
+-- Этот запрос выбирает столбцы IDCook, Composit, IDStudent из таблицы Ord, у которых IDCook равен 1 и сортирует по убыванию по столбцу IDStudent:
+
+SELECT IDCook, Composit, IDStudent FROM Ord
+WHERE IDCook = 1
+ORDER BY IDStudent DESC;
+
+-- Этот запрос выбирает Ord.IDOrd, Ord.Composit, Ord.IDCook, Student.name, Student.Kard, Student.IDDish (как ID_блюда) из таблицы Ord, Student, у которых Ord.IDStudent = Student.IDStudent. Сортировка идет по столбцу Student.Kard по убыванию.
+
+SELECT Ord.IDOrd, Ord.Composit, Ord.IDCook, Student.name, Student.Kard, Student.IDDish AS ID_блюда
+FROM Ord, Student
+WHERE Ord.IDStudent = Student.IDStudent 
+ORDER BY Student.Kard DESC;
+
+-- Этот запрос выбирает имена студентов, у которых IDStudent равен 3:
+
+SELECT Name FROM Student WHERE IDStudent
+IN (SELECT IDStudent FROM Student WHERE IDStudent = 3);
+
+-- Этот запрос показывает, сколько заказов забрали студенты.
+
+SELECT Menu.IDDish, COUNT(Student.IDDish)
+FROM Menu, Student
+WHERE Menu.IDDish = Student.IDDish
+GROUP BY Menu.IDDish;
+
+
+================================ ПР_4
+
+CREATE VIEW v1 AS
+SELECT Ord.IDOrd AS ID_Заказа, 
+        Student.Name AS ИмяСтудента,
+        Cook.Name As Повар  
+FROM Ord INNER JOIN Student ON Ord.IDStudent = Student.IDStudent
+INNER JOIN Cook ON Ord.IDCook = Cook.IDCook;
+
+SELECT * FROM v1;
+
+
+
+CREATE VIEW v2 AS
+SELECT Ord.IDOrd AS ID_Заказа, 
+        Student.Name AS ИмяСтудента,
+        Cook.Name As Повар  
+FROM Ord INNER JOIN Student ON Ord.IDStudent = Student.IDStudent
+INNER JOIN Cook ON Ord.IDCook = Cook.IDCook;
+
+SELECT * FROM v2;
+
+
+
+CREATE VIEW v3 AS
+SELECT Ord.IDOrd AS ID_Заказа, 
+        Cook.name AS Повар
+FROM Ord INNER JOIN Cook ON Ord.IDCook = Cook.IDCook;
+
+SELECT * FROM v3;
+

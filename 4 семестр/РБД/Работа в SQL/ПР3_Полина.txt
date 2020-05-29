@@ -1,0 +1,84 @@
+ПР3_Полина.txt
+==============
+
+
+CREATE TABLE Room (
+	IDRoom INT NOT NULL AUTO_INCREMENT,
+	TypeOfNumber TEXT(50) NOT NULL,
+	NumberOfRooms INT NOT NULL,
+	Services TEXT(200) NOT NULL,
+	Price INT NOT NULL,
+	IDReservation INT NOT NULL,
+	PRIMARY KEY(IDRoom),
+	FOREIGN KEY (IDReservation) REFERENCES Reservation(IDReservation)
+);
+
+CREATE TABLE Customer (
+	IDCustomer INT NOT NULL AUTO_INCREMENT,
+	Name  TEXT(50) NOT NULL,
+	PRIMARY KEY(IDCustomer),
+	IDRoom INT NOT NULL,
+	IDAdm INT NOT NULL,
+	FOREIGN KEY (IDRoom) REFERENCES Room(IDRoom),
+	FOREIGN KEY (IDAdm) REFERENCES Adm(IDAdm)	
+);
+
+
+
+-- Этот запрос выбирает столбцы IDRoom, TypeOfNumber, Services из таблицы Room, у которых IDRoom равен 1 и сортирует по убыванию по столбцу IDRoom:
+
+SELECT IDRoom, TypeOfNumber, Services FROM Room
+WHERE IDRoom = 1
+ORDER BY IDRoom DESC;
+
+-- Этот запрос выбирает Room.IDRoom, Room.TypeOfNumber, Room.Services, Customer.IDAdm, Customer.IDAdm (как ID_flvbybcnhfnjhf) из таблицы Room, Customer, у которых Room.IDRoom = Customer.IDRoom. Сортировка идет по столбцу Customer.IDAdm по убыванию.
+
+SELECT Room.IDRoom, Room.TypeOfNumber, Room.Services, Customer.Name, Customer.IDAdm AS ID_администратора
+FROM Room, Customer
+WHERE Room.IDRoom = Customer.IDRoom 
+ORDER BY Customer.IDAdm DESC;
+
+-- Этот запрос выбирает имена посетителей, у которых IDCustomer равен 3:
+
+SELECT Name FROM Customer WHERE IDCustomer
+IN (SELECT IDCustomer FROM Customer WHERE IDCustomer = 3);
+
+-- Этот запрос показывает, сколько номеров зарезервировали заказчики.
+
+SELECT Customer.Name, COUNT(Room.IDRoom)
+FROM Customer, Room
+WHERE Customer.IDRoom = Room.IDRoom
+GROUP BY Room.IDRoom;
+
+
+
+================================ ПР_4
+
+CREATE VIEW r1 AS
+SELECT Customer.Name AS Посетитель, 
+        Room.TypeOfNumber AS ТипЗказазанногоНомера
+FROM Customer INNER JOIN Room ON Customer.IDRoom = Room.IDRoom;
+
+SELECT * FROM r1;
+
+
+
+CREATE VIEW r2 AS
+SELECT Customer.Name AS Посетитель, 
+        Adm.Name AS ИмяАдминистратора
+FROM Customer INNER JOIN Adm ON Customer.IDAdm = Adm.IDAdm;
+
+SELECT * FROM r2;
+
+
+
+CREATE VIEW r3 AS
+SELECT Customer.Name AS Посетитель, 
+       Room.TypeOfNumber AS ТипЗказазанногоНомера,
+       Room.Services AS Сервис
+FROM Customer INNER JOIN Room ON Customer.IDRoom = Room.IDRoom;
+
+SELECT * FROM r3;
+
+
+

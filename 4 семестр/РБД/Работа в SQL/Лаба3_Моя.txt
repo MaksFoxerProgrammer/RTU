@@ -1,0 +1,82 @@
+Лаба3_Моя.txt
+
+===================================
+
+DROP DATABASE mytestbd;
+
+CREATE DATABASE mytestbd;
+USE mytestbd;
+
+
+CREATE TABLE Menu (
+	IDDish INT NOT NULL AUTO_INCREMENT,
+	Name VARCHAR(100) NOT NULL,
+	CostD INT NOT NULL,
+	PRIMARY KEY(IDDish) 
+);
+
+CREATE TABLE Student (
+    IDStudent INT NOT NULL AUTO_INCREMENT,
+    Kard INT,
+    Name VARCHAR(100) NOT NULL,
+    IDDish INT NOT NULL,
+    PRIMARY KEY(IDStudent),
+    FOREIGN KEY (IDDish) REFERENCES Menu(IDDish)
+);
+
+CREATE TABLE Cashier (
+	IDCashier INT NOT NULL AUTO_INCREMENT,
+	Name VARCHAR(100) NOT NULL,
+	PRIMARY KEY(IDCashier) 
+);
+
+CREATE TABLE Cook (
+	IDCook  INT NOT NULL AUTO_INCREMENT,
+	Name  VARCHAR(100) NOT NULL,
+	PRIMARY KEY(IDCook)
+);
+
+CREATE TABLE Ord (
+	IDOrd INT NOT NULL AUTO_INCREMENT,
+	Composit TEXT(100) NOT NULL,
+	IDStudent INT NOT NULL,
+	IDCook INT NOT NULL,
+	PRIMARY KEY(IDOrd),
+	FOREIGN KEY (IDStudent) REFERENCES Student(IDStudent),
+	FOREIGN KEY (IDCook) REFERENCES Cook(IDCook)
+);
+
+SHOW TABLES;
+
+
+INSERT INTO Menu (Name, CostD) VALUES ('Печеньки', '40'), ('Борщь', '100'), ('Шашлык с картошкой', '500'), ('Шаурма', '10000');
+
+SELECT * FROM Menu;
+
+INSERT INTO Student (Kard, Name, IDDish) VALUES ('12342', 'Макс', '3'), ('23413', 'Даша', '4'), ('34263', 'Маша', '2'), ('74850', 'Вова', '1');
+
+SELECT * FROM Student;
+
+INSERT INTO Cashier (Name) VALUES ('Василиса'), ('Анатолий');
+
+SELECT * FROM Cashier;
+
+INSERT INTO Cook (Name) VALUES ('Валера'), ('Мария');
+
+SELECT * FROM Cook;
+
+INSERT INTO Ord (Composit, IDStudent, IDCook) VALUES ('Шашлык с картошкой', '1', '1'), ('Шаурма', '2', '1'),('Борщь', '3', '2'),('Печеньки', '4', '2');
+
+SELECT * FROM Ord;
+
+	-- Вывод по равенству значений столбца указанным делается следующим образом: SELECT * FROM table_name WHERE column_name = “…”; Данная процедура позволяет нам отсортировать таблицу по конкретному значению столбца. \c
+
+SELECT * FROM Student WHERE Name = 'Даша';
+
+	-- Вывод только определенных столбцов делается следующим образом: SELECT column1_name, column2_name,…,column_name FROM table_name; \c
+
+SELECT Name,Kard FROM Student;
+
+	-- Вывести таблицу, связующую Студента с названием блюда: \c
+
+SELECT Student.Name AS Студент, Menu.Name AS Заказ FROM Student JOIN Menu ON Student.IDDish = Menu.IDDish;

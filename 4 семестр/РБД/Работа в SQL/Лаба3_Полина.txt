@@ -1,0 +1,67 @@
+Лаба3_Полина.txt
+
+======================================
+		Полина
+======================================
+DROP DATABASE Polina;
+
+CREATE DATABASE Polina;
+USE Polina;
+
+CREATE TABLE Reservation (
+	IDReservation INT NOT NULL AUTO_INCREMENT,
+	Term TEXT(50) NOT NULL,
+	CheckInTime TEXT(50) NOT NULL,
+	PRIMARY KEY(IDReservation)
+);
+
+CREATE TABLE Room (
+	IDRoom INT NOT NULL AUTO_INCREMENT,
+	TypeOfNumber TEXT(50) NOT NULL,
+	NumberOfRooms INT NOT NULL,
+	Services TEXT(200) NOT NULL,
+	Price INT NOT NULL,
+	IDReservation INT NOT NULL,
+	PRIMARY KEY(IDRoom),
+	FOREIGN KEY (IDReservation) REFERENCES Reservation(IDReservation)
+);
+
+CREATE TABLE Adm (
+	IDAdm INT NOT NULL AUTO_INCREMENT,
+	Name TEXT(50) NOT NULL,
+	PRIMARY KEY (IDAdm)
+);
+
+CREATE TABLE Customer (
+	IDCustomer INT NOT NULL AUTO_INCREMENT,
+	Name  TEXT(50) NOT NULL,
+	PRIMARY KEY(IDCustomer),
+	IDRoom INT NOT NULL,
+	IDAdm INT NOT NULL,
+	FOREIGN KEY (IDRoom) REFERENCES Room(IDRoom),
+	FOREIGN KEY (IDAdm) REFERENCES Adm(IDAdm)	
+);
+
+SHOW TABLES;
+
+INSERT INTO Reservation (Term, CheckInTime) VALUES ('1 день', '8:00'), ('2 недели', '13:00'), ('3 дня', '8:30'),('двое суток', '20:20');
+
+INSERT INTO Room (TypeOfNumber, NumberOfRooms, Services, Price, IDReservation) VALUES ('Бюджет', '2', 'Сервис 1', '1000', '1'),('Премиум', '2', 'Сервис 2', '2000', '2'), ('Де-люкс', '3', 'Сервис 3', '3000', '3'), ('Лакшари', '5', 'Сервис 4', '8000', '4');
+
+INSERT INTO Adm (Name) VALUES ('Вася'), ('Петя');
+
+INSERT INTO Customer (Name, IDRoom, IDAdm) VALUES ('Петров', '1', '1'), ('Сидоров', '2', '2'), ('Сарачков', '3', '1'), ('Бубнов', '4', '2');
+
+SELECT * FROM Reservation;
+SELECT * FROM Room;
+SELECT * FROM Adm;
+SELECT * FROM Customer;
+
+	Вывод по равенству значений столбца указанным делается следующим образом: SELECT * FROM table_name WHERE column_name = “…”; Данная процедура позволяет нам отсортировать таблицу по конкретному значению столбца.
+
+SELECT * FROM Room WHERE TypeOfNumber = 'Лакшари';
+
+	Вывод только определенных столбцов делается следующим образом: SELECT column1_name, column2_name,…,column_name FROM table_name;
+
+SELECT Name,IDRoom FROM Customer;
+

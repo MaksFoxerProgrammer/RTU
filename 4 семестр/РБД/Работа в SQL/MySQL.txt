@@ -52,6 +52,12 @@ SELECT * FROM [table name] WHERE name != "Bob" AND phone_number = '3444444' orde
 ВКЛ - systemctl enable mariadb
 ВКЛ - mysql -u root -p
 
+DROP DATABASE mytestbd;
+
+CREATE DATABASE mytestbd;
+USE mytestbd;
+
+
 CREATE TABLE Menu (
 	IDDish INT NOT NULL AUTO_INCREMENT,
 	Name VARCHAR(100) NOT NULL,
@@ -61,8 +67,7 @@ CREATE TABLE Menu (
 
 CREATE TABLE Student (
     IDStudent INT NOT NULL AUTO_INCREMENT,
-    Pass VARCHAR(100) NOT NULL,
-    Kard INT NOT NULL,
+    Kard INT,
     Name VARCHAR(100) NOT NULL,
     IDDish INT NOT NULL,
     PRIMARY KEY(IDStudent),
@@ -83,7 +88,6 @@ CREATE TABLE Cook (
 
 CREATE TABLE Ord (
 	IDOrd INT NOT NULL AUTO_INCREMENT,
-	Dat INT NOT NULL,
 	Composit TEXT(100) NOT NULL,
 	IDStudent INT NOT NULL,
 	IDCook INT NOT NULL,
@@ -92,11 +96,47 @@ CREATE TABLE Ord (
 	FOREIGN KEY (IDCook) REFERENCES Cook(IDCook)
 );
 
+SHOW TABLES;
+
+
+INSERT INTO Menu (Name, CostD) VALUES ('Печеньки', '40'), ('Борщь', '100'), ('Шашлык с картошкой', '500'), ('Шаурма', '10000');
+
+SELECT * FROM Menu;
+
+INSERT INTO Student (Kard, Name, IDDish) VALUES ('12342', 'Макс', '3'), ('23413', 'Даша', '4'), ('34263', 'Маша', '2'), ('74850', 'Вова', '1');
+
+SELECT * FROM Student;
+
+INSERT INTO Cashier (Name) VALUES ('Василиса'), ('Анатолий');
+
+SELECT * FROM Cashier;
+
+INSERT INTO Cook (Name) VALUES ('Валера'), ('Мария');
+
+SELECT * FROM Cook;
+
+INSERT INTO Ord (Composit, IDStudent, IDCook) VALUES ('Шашлык с картошкой', '1', '1'), ('Шаурма', '2', '1'),('Борщь', '3', '2'),('Печеньки', '4', '2');
+
+SELECT * FROM Ord;
+
+	-- Вывод по равенству значений столбца указанным делается следующим образом: SELECT * FROM table_name WHERE column_name = “…”; Данная процедура позволяет нам отсортировать таблицу по конкретному значению столбца. \c
+
+SELECT * FROM Student WHERE Name = 'Даша';
+
+	-- Вывод только определенных столбцов делается следующим образом: SELECT column1_name, column2_name,…,column_name FROM table_name; \c
+
+SELECT Name,Kard FROM Student;
+
+	-- Вывести таблицу, связующую Студента с названием блюда: \c
+
+SELECT Student.Name AS Студент, Menu.Name AS Заказ FROM Student JOIN Menu ON Student.IDDish = Menu.IDDish;
 
 
 ======================================
 		Полина
 ======================================
+DROP DATABASE Polina;
+
 CREATE DATABASE Polina;
 USE Polina;
 
@@ -107,11 +147,14 @@ CREATE TABLE Reservation (
 	PRIMARY KEY(IDReservation)
 );
 
-CREATE TABLE Customer (
-	IDCustomer INT NOT NULL AUTO_INCREMENT,
-	Name  TEXT(50) NOT NULL,
+CREATE TABLE Room (
+	IDRoom INT NOT NULL AUTO_INCREMENT,
+	TypeOfNumber TEXT(50) NOT NULL,
+	NumberOfRooms INT NOT NULL,
+	Services TEXT(200) NOT NULL,
+	Price INT NOT NULL,
 	IDReservation INT NOT NULL,
-	PRIMARY KEY(IDCustomer),
+	PRIMARY KEY(IDRoom),
 	FOREIGN KEY (IDReservation) REFERENCES Reservation(IDReservation)
 );
 
@@ -121,21 +164,47 @@ CREATE TABLE Adm (
 	PRIMARY KEY (IDAdm)
 );
 
-CREATE TABLE Room (
-	IDRoom INT NOT NULL AUTO_INCREMENT,
-	TypeOfNumber TEXT(50) NOT NULL,
-	NumberOfRooms INT NOT NULL,
-	Services TEXT(200) NOT NULL,
-	Price INT NOT NULL,
-	IDCustomer INT NOT NULL,
+CREATE TABLE Customer (
+	IDCustomer INT NOT NULL AUTO_INCREMENT,
+	Name  TEXT(50) NOT NULL,
+	PRIMARY KEY(IDCustomer),
+	IDRoom INT NOT NULL,
 	IDAdm INT NOT NULL,
-	PRIMARY KEY(IDRoom),
-	FOREIGN KEY (IDCustomer) REFERENCES Customer(IDCustomer),
-	FOREIGN KEY (IDAdm) REFERENCES Adm(IDAdm)
+	FOREIGN KEY (IDRoom) REFERENCES Room(IDRoom),
+	FOREIGN KEY (IDAdm) REFERENCES Adm(IDAdm)	
 );
 
 SHOW TABLES;
 
-INSERT INTO Reservation (Term, CheckInTime) VALUES ('1 день', '8:00'), ('2 недели', '13:00'),('3 дня', '8:30'),('двое суток', '20:20');
+INSERT INTO Reservation (Term, CheckInTime) VALUES ('1 день', '8:00'), ('2 недели', '13:00'), ('3 дня', '8:30'),('двое суток', '20:20');
 
-INSERT INTO AuthorsTBL (AuthorID, AuthorName) VALUES ('1', 'Agatha Christie'), ('2', 'Stephen King'), ('3', 'Paulo Coelho');
+INSERT INTO Room (TypeOfNumber, NumberOfRooms, Services, Price, IDReservation) VALUES ('Бюджет', '2', 'Сервис 1', '1000', '1'),('Премиум', '2', 'Сервис 2', '2000', '2'), ('Де-люкс', '3', 'Сервис 3', '3000', '3'), ('Лакшари', '5', 'Сервис 4', '8000', '4');
+
+INSERT INTO Adm (Name) VALUES ('Вася'), ('Петя');
+
+INSERT INTO Customer (Name, IDRoom, IDAdm) VALUES ('Петров', '1', '1'), ('Сидоров', '2', '2'), ('Сарачков', '3', '1'), ('Бубнов', '4', '2');
+
+SELECT * FROM Reservation;
+SELECT * FROM Room;
+SELECT * FROM Adm;
+SELECT * FROM Customer;
+
+	Вывод по равенству значений столбца указанным делается следующим образом: SELECT * FROM table_name WHERE column_name = “…”; Данная процедура позволяет нам отсортировать таблицу по конкретному значению столбца.
+
+SELECT * FROM Room WHERE TypeOfNumber = 'Лакшари';
+
+	Вывод только определенных столбцов делается следующим образом: SELECT column1_name, column2_name,…,column_name FROM table_name;
+
+SELECT Name,IDRoom FROM Customer;
+
+
+
+
+====================================================================
+
+
+SELECT * FROM Menu;
+SELECT * FROM Student;
+SELECT * FROM Cashier;
+SELECT * FROM Cook;
+SELECT * FROM Ord;
