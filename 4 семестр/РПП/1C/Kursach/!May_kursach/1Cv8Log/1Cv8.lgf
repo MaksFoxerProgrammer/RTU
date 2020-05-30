@@ -16,4 +16,15 @@
 {3,"1CV8C",2},
 {4,"_$Transaction$_.Begin",6},
 {4,"_$Transaction$_.Commit",7},
-{3,"BackgroundJob",3}
+{3,"BackgroundJob",3},
+{4,"_$Data$_.Update",8},
+{5,14edafb0-270b-4b1b-9e1a-ba352e04848f,"Справочник.Должности",1},
+{4,"_$Data$_.Delete",9},
+{5,999243c3-22e9-4baa-aa32-f7b9761046a3,"Справочник.Файлы",2},
+{5,139758e3-610e-49a0-85f4-5e5c7b5bda35,"Справочник.Косметика",3},
+{5,feb17663-3807-4597-9e3a-ac532417806e,"Справочник.Услуги",4},
+{4,"_$InfoBase$_.ConfigUpdate",10},
+{4,"_$InfoBase$_.DBConfigUpdateStart",11},
+{4,"_$InfoBase$_.DBConfigUpdate",12},
+{4,"_$InfoBase$_.DumpStart",13},
+{4,"_$InfoBase$_.DumpFinish",14}
