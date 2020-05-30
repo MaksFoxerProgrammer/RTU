@@ -1,0 +1,16 @@
+Лаба 3
+ls -al | awk '{if($1= /r--/)print $9}'
+ls -l | awk '/^d.+/' | awk '{print($9,$10)}' |awk '/[а-я А-Я]/'
+ls -l -R | grep ".txt" | awk '{sum+=$5} END {print sum}'
+ls -ls | awk 'BEGIN {sum = 0}{sum = sum + $1/4} END {print sum}'
+ls -l |sort | awk '{if ($1 !~/d/) {print $1, $NF}}'-rw-r--r--
+
+cd Документы/
+ls
+nano test.txt
+ls
+cd ..
+find -name "test.txt" | awk -F'/' '{print($(NF-1))}'
+
+last -a | awk 'BEGIN {s=0} {if($1 = "maks") s=s+1} END {print(s)}'
+last -a | awk '{if($1 != "reboot"&&$1 !-"wtmp"){print $1 " " $6 | "sort -k8"}}'
